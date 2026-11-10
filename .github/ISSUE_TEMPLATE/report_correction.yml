@@ -1,0 +1,27 @@
+name: "Report a Price or License Correction"
+description: "Submit an update for changed pricing, license updates, or outdated trade-off descriptions"
+title: "[Correction]: <Tool Name>"
+labels: ["data-fix", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pricing changes constantly and licenses evolve. Thanks for keeping our catalog accurate!
+
+  - type: input
+    id: tool_name
+    attributes:
+      label: Tool Name
+      description: Which SaaS or Alternative needs an update?
+      placeholder: e.g. Postman
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction_details
+    attributes:
+      label: Description of Correction
+      description: What is currently listed, what should it be changed to, and what is your source?
+      placeholder: "The SaaS price recently increased from $14 to $19/user/month. Source: https://..."
+    validations:
+      required: true

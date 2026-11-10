@@ -1,0 +1,106 @@
+name: "Suggest a New Alternative"
+description: "Propose a new open-source alternative to replace an expensive proprietary SaaS tool"
+title: "[Suggestion]: <SaaS Tool> → <Alternative>"
+labels: ["enhancement", "tool-suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping expand the directory! Please fill out the details below so we can verify the data.
+
+  - type: input
+    id: saas_name
+    attributes:
+      label: Proprietary SaaS Name
+      description: What is the expensive proprietary tool?
+      placeholder: e.g. Mailchimp
+    validations:
+      required: true
+
+  - type: input
+    id: saas_price
+    attributes:
+      label: SaaS Monthly Price (USD per user or base tier)
+      description: Current verified list price per seat/month.
+      placeholder: e.g. 20.00
+    validations:
+      required: true
+
+  - type: input
+    id: alt_name
+    attributes:
+      label: Open-Source Alternative Name
+      description: The name of the open-source software.
+      placeholder: e.g. Listmonk
+    validations:
+      required: true
+
+  - type: input
+    id: alt_url
+    attributes:
+      label: Alternative Website / Repository URL
+      description: Official website or GitHub/GitLab repository.
+      placeholder: https://github.com/knadh/listmonk
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: License
+      description: SPDX identifier (e.g. AGPL-3.0, Apache-2.0, MIT).
+      placeholder: AGPL-3.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Choose the closest category.
+      options:
+        - Communication
+        - Project Management
+        - Developer Tools
+        - Analytics
+        - Design & Creative
+        - Security & Passwords
+        - Automation
+        - Customer Support
+        - Forms & Surveys
+        - Documentation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Setup & Maintenance Difficulty
+      description: How hard is it to self-host and operate?
+      options:
+        - easy
+        - medium
+        - hard
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_youll_miss
+    attributes:
+      label: ⚠️ What You'll Miss (Honest Trade-offs)
+      description: Be specific. What convenience, integrations, or polish does the proprietary SaaS have that this open-source tool lacks?
+      placeholder: e.g. Managed deliverability reputation (you must supply SES/SendGrid), drag-and-drop email builder polish, and turnkey ecommerce sync.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Verification Checklist
+      options:
+        - label: I verified that the alternative is actively maintained.
+          required: true
+        - label: I checked the license in the upstream repository.
+          required: true
+        - label: There are NO affiliate or tracking parameters in any provided links.
+          required: true
