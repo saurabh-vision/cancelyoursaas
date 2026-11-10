@@ -35,6 +35,39 @@
     "Google Analytics", "1Password (Business)", "Make (Core)", "Notion (Plus)"
   ]);
 
+  const DOCKER_QUICK_RUN = {
+    "Mattermost": "docker run -d -p 8065:8065 mattermost/mattermost-team-edition",
+    "Vaultwarden": "docker run -d -p 8080:80 -v ./vw-data:/data vaultwarden/server:latest",
+    "n8n": "docker run -it --rm -p 5678:5678 -v ~/.n8n:/home/node/.n8n docker.n8n.io/n8nio/n8n",
+    "NocoDB": "docker run -d -p 8080:8080 -v ./nocodb:/usr/app/data nocodb/nocodb:latest",
+    "Appsmith": "docker run -d -p 80:80 -v ./appsmith-stacks:/appsmith-stacks appsmith/appsmith-ce",
+    "Gitea": "docker run -d -p 3000:3000 -p 222:22 -v ./gitea:/data gitea/gitea:latest",
+    "Activepieces": "docker run -d -p 8080:80 activepieces/activepieces:latest",
+    "FreeScout": "docker run -d -p 80:80 tiredofit/freescout",
+    "Chatwoot": "docker run -d -p 3000:3000 chatwoot/chatwoot:latest",
+    "Plane": "docker run -d -p 80:80 makeplane/plane",
+    "Cal.com": "docker run -d -p 3000:3000 calcom.docker.scarf.sh/calcom/cal.com",
+    "Vikunja": "docker run -p 3456:3456 -v ./vikunja:/app/vikunja/files vikunja/vikunja",
+    "WeKan": "docker run -d -p 8080:8080 wekanteam/wekan",
+    "NetBird": "docker run -d -p 33073:33073 netbirdio/netbird",
+    "OpenBao": "docker run -d -p 8200:8200 openbao/openbao server -dev",
+    "Formbricks": "docker run -d -p 3000:3000 formbricks/formbricks",
+    "HeyForm": "docker run -d -p 8000:8000 heyform/heyform",
+    "BookStack": "docker run -d -p 6875:80 lscr.io/linuxserver/bookstack",
+    "Wiki.js": "docker run -d -p 80:3000 requarks/wiki:2",
+    "Documenso": "docker run -d -p 3000:3000 documenso/documenso",
+    "Plausible Analytics": "docker run -d -p 8000:8000 plausible/analytics",
+    "PostHog": "docker run -d -p 8000:8000 posthog/posthog:latest",
+    "Matomo": "docker run -d -p 8080:80 matomo:latest",
+    "Jitsu": "docker run -d -p 8000:8000 jitsucom/jitsu:latest",
+    "Penpot": "docker run -d -p 9001:9001 penpotapp/frontend",
+    "authentik": "docker run -d -p 9000:9000 beryju/authentik",
+    "Cap": "docker run -d -p 3000:3000 capsoftware/cap",
+    "GlitchTip": "docker run -d -p 8000:8000 glitchtip/glitchtip",
+    "LimeSurvey": "docker run -d -p 8080:80 limesurvey/limesurvey",
+    "OhMyForm": "docker run -d -p 5000:5000 ohmyform/ohmyform"
+  };
+
   // DOM Elements
   const container = document.getElementById('tools-container');
   const searchInput = document.getElementById('search-input');
@@ -303,6 +336,40 @@
     }
     updateCardState(saasName);
     updateCalculator();
+  };
+
+  window.toggleDockerSnippet = function (btn) {
+    const box = btn.nextElementSibling;
+    if (box) {
+      box.classList.toggle('open');
+      const isOpen = box.classList.contains('open');
+      const chevron = btn.querySelector('.chevron');
+      if (chevron) chevron.textContent = isOpen ? '▴' : '▾';
+    }
+  };
+
+  window.copyDockerSnippet = async function (btn, code) {
+    try {
+      await navigator.clipboard.writeText(code);
+      const originalText = btn.textContent;
+      btn.textContent = 'Copied!';
+      showToast('📋 Copied Docker run command!');
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 2000);
+    } catch (e) {
+      const textarea = document.createElement('textarea');
+      textarea.value = code;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      btn.textContent = 'Copied!';
+      showToast('📋 Copied Docker run command!');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+      }, 2000);
+    }
   };
 
   function updateCardState(saasName) {
@@ -585,6 +652,19 @@
         : '';
 
       const escapedSaasName = tool.saas_name.replace(/'/g, "\\'");
+      const dockerCmd = DOCKER_QUICK_RUN[tool.alternative_name] || null;
+      const dockerSnippetHtml = dockerCmd ? `
+        <div class="card-docker-wrap">
+          <button type="button" class="btn-docker-toggle" onclick="toggleDockerSnippet(this)" aria-label="Toggle Docker command for ${tool.alternative_name}">
+            <span>📦 Quick Run (Docker)</span>
+            <span class="chevron">▾</span>
+          </button>
+          <div class="card-docker-box">
+            <code>${dockerCmd}</code>
+            <button type="button" class="btn-copy-code" onclick="copyDockerSnippet(this, '${dockerCmd.replace(/'/g, "\\'")}')" aria-label="Copy Docker command">Copy</button>
+          </div>
+        </div>
+      ` : '';
 
       return `
         <article class="tool-card ${isSelected ? 'selected' : ''}" data-tool-name="${tool.saas_name}">
@@ -622,6 +702,8 @@
               <strong>⚠️ What you'll miss</strong>
               <p>${tool.what_youll_miss}</p>
             </div>
+
+            ${dockerSnippetHtml}
           </div>
 
           <div class="card-footer-row">
