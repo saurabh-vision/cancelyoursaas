@@ -10,9 +10,12 @@
 # - cloud_price: Optional pricing for managed cloud hosting (string, optional)
 # - difficulty: Self-hosting and maintenance difficulty: easy | medium | hard (string)
 # - what_youll_miss: Honest, pragmatic trade-offs and missing convenience features (string)
-# - category: Functional category, e.g., Team Communication, Automation, Scheduling (string)
+# - category: Functional category (string)
 
 tools:
+  # ==========================================
+  # 1. Communication
+  # ==========================================
   - saas_name: "Slack"
     saas_price_per_user_month: 8.75
     alternative_name: "Mattermost"
@@ -22,20 +25,20 @@ tools:
     cloud_option_url: "https://mattermost.com/pricing/"
     cloud_price: "$10/user/month"
     difficulty: "medium"
-    what_youll_miss: "Polished Slack Huddles experience, thousands of pre-configured bot integrations, and friction-free cross-organization Slack Connect channels."
-    category: "Team Communication & Chat"
+    what_youll_miss: "Polished Slack Huddles, friction-free cross-org Slack Connect channels, and thousands of pre-configured enterprise bot plugins."
+    category: "Communication"
 
-  - saas_name: "Zapier"
-    saas_price_per_user_month: 29.99
-    alternative_name: "n8n"
-    alternative_url: "https://n8n.io"
-    license: "Sustainable Use License"
+  - saas_name: "Zoom"
+    saas_price_per_user_month: 16.99
+    alternative_name: "Jitsi Meet"
+    alternative_url: "https://jitsi.org/jitsi-meet/"
+    license: "Apache-2.0"
     self_host: true
-    cloud_option_url: "https://n8n.io/pricing"
-    cloud_price: "€20/month"
-    difficulty: "medium"
-    what_youll_miss: "Immediate out-of-the-box OAuth connections for 6,000+ niche web apps and zero-maintenance webhook queues without server administration."
-    category: "Workflow & Automation"
+    cloud_option_url: "https://jaas.8x8.vc/"
+    cloud_price: "Pay-as-you-go / Custom"
+    difficulty: "hard"
+    what_youll_miss: "Zoom's fault-tolerant packet loss recovery on poor connections, AI meeting summaries with zero lag, and instant participant phone dial-in."
+    category: "Communication"
 
   - saas_name: "Calendly"
     saas_price_per_user_month: 12.00
@@ -46,5 +49,548 @@ tools:
     cloud_option_url: "https://cal.com/pricing"
     cloud_price: "Free tier / $15/user/month"
     difficulty: "easy"
-    what_youll_miss: "Ubiquitous brand familiarity with non-technical corporate clients and some complex enterprise round-robin routing presets."
-    category: "Scheduling & Meetings"
+    what_youll_miss: "Universal name recognition with non-technical corporate clients and turn-key enterprise round-robin routing logic."
+    category: "Communication"
+
+  - saas_name: "Discord (Nitro)"
+    saas_price_per_user_month: 9.99
+    alternative_name: "Revolt"
+    alternative_url: "https://revolt.chat"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "medium"
+    what_youll_miss: "Massive public server ecosystem, rich Discord bot ecosystem (Midjourney, gaming integrations), and universal voice channel bitrate stability."
+    category: "Communication"
+
+  # ==========================================
+  # 2. Project Management
+  # ==========================================
+  - saas_name: "Jira"
+    saas_price_per_user_month: 8.50
+    alternative_name: "Plane"
+    alternative_url: "https://plane.so"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://plane.so/pricing"
+    cloud_price: "Free tier / $8/user/month"
+    difficulty: "medium"
+    what_youll_miss: "Decades of battle-tested enterprise compliance plugins, Confluence deep bi-directional linking, and endless custom workflow JQL triggers."
+    category: "Project Management"
+
+  - saas_name: "Trello"
+    saas_price_per_user_month: 6.00
+    alternative_name: "WeKan"
+    alternative_url: "https://wekan.github.io"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Slick Atlassian Power-Ups marketplace, Butler visual workflow automation builder, and official mobile apps with push sync."
+    category: "Project Management"
+
+  - saas_name: "Asana"
+    saas_price_per_user_month: 13.49
+    alternative_name: "Vikunja"
+    alternative_url: "https://vikunja.io"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://vikunja.io"
+    cloud_price: "€4/month"
+    difficulty: "easy"
+    what_youll_miss: "Sophisticated multi-project portfolio management dashboards, native goal tracking, and Asana Intelligence automated workload rebalancing."
+    category: "Project Management"
+
+  - saas_name: "Monday.com"
+    saas_price_per_user_month: 14.00
+    alternative_name: "Taiga"
+    alternative_url: "https://taiga.io"
+    license: "MPL-2.0"
+    self_host: true
+    cloud_option_url: "https://taiga.io/pricing"
+    cloud_price: "Free tier / $7/user/month"
+    difficulty: "medium"
+    what_youll_miss: "Flashy colorful column widgets, low-code CRM automation templates, and seamless client portal white-labeling."
+    category: "Project Management"
+
+  - saas_name: "Linear"
+    saas_price_per_user_month: 10.00
+    alternative_name: "Leantime"
+    alternative_url: "https://leantime.io"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://leantime.io/pricing"
+    cloud_price: "$4.99/user/month"
+    difficulty: "easy"
+    what_youll_miss: "Ultra-fast native keyboard-first command bar (Cmd+K), instant sub-millisecond local-first sync engine, and native git branch workflow hooks."
+    category: "Project Management"
+
+  # ==========================================
+  # 3. Developer Tools
+  # ==========================================
+  - saas_name: "GitHub (Team)"
+    saas_price_per_user_month: 4.00
+    alternative_name: "Gitea"
+    alternative_url: "https://gitea.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Global GitHub Actions marketplace of thousands of community CI steps, GitHub Codespaces cloud dev environments, and npm/container package registries."
+    category: "Developer Tools"
+
+  - saas_name: "Postman"
+    saas_price_per_user_month: 19.00
+    alternative_name: "Bruno"
+    alternative_url: "https://www.usebruno.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Cloud-hosted shared team mock servers, automated cloud monitors without local runner agents, and centralized web UI API documentation portal."
+    category: "Developer Tools"
+
+  - saas_name: "Vercel (Pro)"
+    saas_price_per_user_month: 20.00
+    alternative_name: "Coolify"
+    alternative_url: "https://coolify.io"
+    license: "Apache-2.0"
+    self_host: true
+    cloud_option_url: "https://coolify.io/pricing"
+    cloud_price: "$5/month"
+    difficulty: "medium"
+    what_youll_miss: "Instant global edge network routing with zero DNS configuration, automatic Preview URL comment overlays for reviewers, and managed Serverless Redis/Blobs."
+    category: "Developer Tools"
+
+  - saas_name: "Datadog (Infra Pro)"
+    saas_price_per_user_month: 15.00
+    alternative_name: "SigNoz"
+    alternative_url: "https://signoz.io"
+    license: "Apache-2.0"
+    self_host: true
+    cloud_option_url: "https://signoz.io/pricing"
+    cloud_price: "Usage-based / $199/month"
+    difficulty: "hard"
+    what_youll_miss: "Over 700+ turnkey cloud vendor integrations, automated ML anomaly detection alerts, and zero-maintenance ClickHouse/Elasticsearch cluster tuning."
+    category: "Developer Tools"
+
+  - saas_name: "Sentry (Team)"
+    saas_price_per_user_month: 29.00
+    alternative_name: "GlitchTip"
+    alternative_url: "https://glitchtip.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: "https://glitchtip.com/pricing"
+    cloud_price: "Free tier / $9/month"
+    difficulty: "medium"
+    what_youll_miss: "Sentry Seer automated AI root-cause analysis, complex distributed tracing spans visualization, and deep continuous profiling features."
+    category: "Developer Tools"
+
+  - saas_name: "Firebase (Blaze Base)"
+    saas_price_per_user_month: 25.00
+    alternative_name: "Supabase"
+    alternative_url: "https://supabase.com"
+    license: "Apache-2.0"
+    self_host: true
+    cloud_option_url: "https://supabase.com/pricing"
+    cloud_price: "Free tier / $25/month"
+    difficulty: "medium"
+    what_youll_miss: "Seamless Google Cloud IAM cross-service binding, Firebase Cloud Messaging push notification serverless infrastructure, and managed NoSQL sharding."
+    category: "Developer Tools"
+
+  - saas_name: "Docker Desktop (Pro)"
+    saas_price_per_user_month: 5.00
+    alternative_name: "Podman Desktop"
+    alternative_url: "https://podman-desktop.io"
+    license: "Apache-2.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Seamless Docker Extensions ecosystem, proprietary Docker Scout vulnerability remediation wizard, and macOS virtualization battery optimizations."
+    category: "Developer Tools"
+
+  # ==========================================
+  # 4. Analytics
+  # ==========================================
+  - saas_name: "Google Analytics"
+    saas_price_per_user_month: 0.00
+    alternative_name: "Plausible Analytics"
+    alternative_url: "https://plausible.io"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://plausible.io/#pricing"
+    cloud_price: "$9/month"
+    difficulty: "medium"
+    what_youll_miss: "Hyper-granular cross-device user-journey stitching, seamless Google Ads conversion attribution, and zero-setup compliance overhead."
+    category: "Analytics"
+
+  - saas_name: "Mixpanel"
+    saas_price_per_user_month: 24.00
+    alternative_name: "PostHog"
+    alternative_url: "https://posthog.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: "https://posthog.com/pricing"
+    cloud_price: "Free tier / Pay-per-event"
+    difficulty: "hard"
+    what_youll_miss: "Instant out-of-the-box retroactive funnel querying without having to maintain ClickHouse database infrastructure and compute resources."
+    category: "Analytics"
+
+  - saas_name: "Hotjar (Growth)"
+    saas_price_per_user_month: 49.00
+    alternative_name: "Matomo"
+    alternative_url: "https://matomo.org"
+    license: "GPL-3.0-or-later"
+    self_host: true
+    cloud_option_url: "https://matomo.org/pricing"
+    cloud_price: "$23/month"
+    difficulty: "medium"
+    what_youll_miss: "Modern Contentsquare AI sentiment analysis, frictionless single-line script heatmap setups without server disk storage management."
+    category: "Analytics"
+
+  - saas_name: "Segment (Team)"
+    saas_price_per_user_month: 120.00
+    alternative_name: "Jitsu"
+    alternative_url: "https://jitsu.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: "https://jitsu.com/pricing"
+    cloud_price: "Free tier / $99/month"
+    difficulty: "medium"
+    what_youll_miss: "Direct native connections to 400+ niche cloud marketing tools and Segment Personas identity resolution engine."
+    category: "Analytics"
+
+  # ==========================================
+  # 5. Design & Creative
+  # ==========================================
+  - saas_name: "Figma (Pro)"
+    saas_price_per_user_month: 15.00
+    alternative_name: "Penpot"
+    alternative_url: "https://penpot.app"
+    license: "MPL-2.0"
+    self_host: true
+    cloud_option_url: "https://penpot.app"
+    cloud_price: "Free / Managed tiers"
+    difficulty: "medium"
+    what_youll_miss: "Massive Figma Community plugin library, Dev Mode Code Connect token syncing, and third-party FigJam ecosystem."
+    category: "Design & Creative"
+
+  - saas_name: "Loom (Business)"
+    saas_price_per_user_month: 15.00
+    alternative_name: "Cap"
+    alternative_url: "https://cap.so"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://cap.so/pricing"
+    cloud_price: "Free tier / $9/month"
+    difficulty: "easy"
+    what_youll_miss: "Automatic filler word removal, instant Loom AI video chapter generation, and Atlassian Jira/Confluence embedded preview players."
+    category: "Design & Creative"
+
+  - saas_name: "Miro (Starter)"
+    saas_price_per_user_month: 10.00
+    alternative_name: "Excalidraw"
+    alternative_url: "https://excalidraw.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: "https://plus.excalidraw.com"
+    cloud_price: "$7/user/month"
+    difficulty: "easy"
+    what_youll_miss: "Miro Enterprise voting sessions, built-in timer, sticky note optical recognition from camera photos, and massive corporate diagram templates."
+    category: "Design & Creative"
+
+  - saas_name: "Adobe Illustrator"
+    saas_price_per_user_month: 22.99
+    alternative_name: "Inkscape"
+    alternative_url: "https://inkscape.org"
+    license: "GPL-3.0-or-later"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Adobe Creative Cloud asset sync, Adobe Sensei generative vector fill, and native CMYK printing press color profile conversions."
+    category: "Design & Creative"
+
+  - saas_name: "Adobe Premiere Pro"
+    saas_price_per_user_month: 22.99
+    alternative_name: "Kdenlive"
+    alternative_url: "https://kdenlive.org"
+    license: "GPL-3.0-or-later"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Adobe Dynamic Link to After Effects, GPU-accelerated speech-to-text auto-captions, and automated color match workflows."
+    category: "Design & Creative"
+
+  # ==========================================
+  # 6. Security & Passwords
+  # ==========================================
+  - saas_name: "1Password (Business)"
+    saas_price_per_user_month: 7.99
+    alternative_name: "Vaultwarden"
+    alternative_url: "https://github.com/dani-garcia/vaultwarden"
+    license: "GPL-3.0"
+    self_host: true
+    cloud_option_url: "https://bitwarden.com/pricing"
+    cloud_price: "Free tier / $3/user/month"
+    difficulty: "easy"
+    what_youll_miss: "1Password's proprietary dual-key Secret Key encryption model, Travel Mode device sanitization, and seamless SCIM directory provisioning."
+    category: "Security & Passwords"
+
+  - saas_name: "Auth0 (B2C Essentials)"
+    saas_price_per_user_month: 35.00
+    alternative_name: "authentik"
+    alternative_url: "https://goauthentik.io"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "medium"
+    what_youll_miss: "Managed bot detection and credential-stuffing defense, zero-maintenance global auth uptime SLAs, and 1-click social logins."
+    category: "Security & Passwords"
+
+  - saas_name: "Cloudflare Access"
+    saas_price_per_user_month: 7.00
+    alternative_name: "NetBird"
+    alternative_url: "https://netbird.io"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://netbird.io/pricing"
+    cloud_price: "Free tier / $5/user/month"
+    difficulty: "medium"
+    what_youll_miss: "Cloudflare's worldwide 300+ city Anycast POP routing backbone and clientless browser-rendered SSH/VNC terminal isolation."
+    category: "Security & Passwords"
+
+  - saas_name: "HashiCorp Vault (Dedicated)"
+    saas_price_per_user_month: 45.00
+    alternative_name: "OpenBao"
+    alternative_url: "https://openbao.org"
+    license: "MPL-2.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "hard"
+    what_youll_miss: "Fully managed automated Raft snapshot backups, managed multi-cloud replication peering, and proprietary FIPS-140 HSM validation."
+    category: "Security & Passwords"
+
+  # ==========================================
+  # 7. Automation
+  # ==========================================
+  - saas_name: "Zapier (Starter)"
+    saas_price_per_user_month: 29.99
+    alternative_name: "n8n"
+    alternative_url: "https://n8n.io"
+    license: "Sustainable Use License"
+    self_host: true
+    cloud_option_url: "https://n8n.io/pricing"
+    cloud_price: "€20/month"
+    difficulty: "medium"
+    what_youll_miss: "Zero-maintenance webhook triggers for 6,000+ niche third-party apps and immediate 1-click OAuth setups without managing API credentials."
+    category: "Automation"
+
+  - saas_name: "Make (Core)"
+    saas_price_per_user_month: 10.59
+    alternative_name: "Activepieces"
+    alternative_url: "https://www.activepieces.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: "https://www.activepieces.com/pricing"
+    cloud_price: "Free tier / $25/month"
+    difficulty: "easy"
+    what_youll_miss: "Make's polished interactive flow execution visualizer, granular error-handling routers, and extensive multi-step data parsing formulas."
+    category: "Automation"
+
+  - saas_name: "Retool (Team)"
+    saas_price_per_user_month: 12.00
+    alternative_name: "Appsmith"
+    alternative_url: "https://www.appsmith.com"
+    license: "Apache-2.0"
+    self_host: true
+    cloud_option_url: "https://www.appsmith.com/pricing"
+    cloud_price: "Free tier / $0.40/user/hr"
+    difficulty: "medium"
+    what_youll_miss: "Retool Workflows background queue workers, Retool Mobile native canvas builder, and rich proprietary component integrations."
+    category: "Automation"
+
+  - saas_name: "Airtable (Team)"
+    saas_price_per_user_month: 24.00
+    alternative_name: "NocoDB"
+    alternative_url: "https://nocodb.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://nocodb.com/pricing"
+    cloud_price: "Free tier / $9/user/month"
+    difficulty: "easy"
+    what_youll_miss: "Airtable Interface Designer polish, deep automations gallery, and built-in frictionless email sync extensions."
+    category: "Automation"
+
+  # ==========================================
+  # 8. Customer Support
+  # ==========================================
+  - saas_name: "Intercom"
+    saas_price_per_user_month: 39.00
+    alternative_name: "Chatwoot"
+    alternative_url: "https://chatwoot.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://chatwoot.com/pricing"
+    cloud_price: "Free tier / $19/user/month"
+    difficulty: "medium"
+    what_youll_miss: "Fin AI agent automated outbound product tours, proactive onboarding sequences, and proprietary user behavioral tracking."
+    category: "Customer Support"
+
+  - saas_name: "Zendesk (Suite Team)"
+    saas_price_per_user_month: 69.00
+    alternative_name: "FreeScout"
+    alternative_url: "https://freescout.net"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Zendesk Sunshine custom objects engine, global voice calling telephony integrations, and hundreds of ready-to-use CRM connectors."
+    category: "Customer Support"
+
+  - saas_name: "Help Scout (Standard)"
+    saas_price_per_user_month: 25.00
+    alternative_name: "Papercups"
+    alternative_url: "https://papercups.io"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "medium"
+    what_youll_miss: "Help Scout Docs turnkey self-service portal, pre-configured collision detection for agent responses, and managed email deliverability."
+    category: "Customer Support"
+
+  - saas_name: "Crisp (Pro)"
+    saas_price_per_user_month: 25.00
+    alternative_name: "Chaskiq"
+    alternative_url: "https://chaskiq.io"
+    license: "GPL-3.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "hard"
+    what_youll_miss: "Crisp MagicBrowse live co-browsing cursor sharing, automated multi-language chat translation, and native video chat inside the widget."
+    category: "Customer Support"
+
+  # ==========================================
+  # 9. Forms & Surveys
+  # ==========================================
+  - saas_name: "Typeform (Basic)"
+    saas_price_per_user_month: 29.00
+    alternative_name: "Formbricks"
+    alternative_url: "https://formbricks.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://formbricks.com/pricing"
+    cloud_price: "Free tier / $99/month"
+    difficulty: "medium"
+    what_youll_miss: "Iconic ultra-smooth keyboard-navigated card transitions, native video question embeds, and turnkey Unsplash photo picker."
+    category: "Forms & Surveys"
+
+  - saas_name: "SurveyMonkey (Advantage)"
+    saas_price_per_user_month: 25.00
+    alternative_name: "LimeSurvey"
+    alternative_url: "https://www.limesurvey.org"
+    license: "GPL-2.0-or-later"
+    self_host: true
+    cloud_option_url: "https://www.limesurvey.org/pricing"
+    cloud_price: "Free tier / $34/month"
+    difficulty: "medium"
+    what_youll_miss: "SurveyMonkey Audience paid consumer research panel on demand, predictive AI survey completion benchmarking, and modern UI polish."
+    category: "Forms & Surveys"
+
+  - saas_name: "Jotform (Bronze)"
+    saas_price_per_user_month: 39.00
+    alternative_name: "HeyForm"
+    alternative_url: "https://heyform.net"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://heyform.net"
+    cloud_price: "Free tier / $15/month"
+    difficulty: "easy"
+    what_youll_miss: "Jotform PDF Editor document generator, 150+ third-party payment gateway integrations, and native mobile form kiosk offline mode."
+    category: "Forms & Surveys"
+
+  - saas_name: "Google Forms (Workspace)"
+    saas_price_per_user_month: 6.00
+    alternative_name: "OhMyForm"
+    alternative_url: "https://ohmyform.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Seamless zero-click Google Sheets live response streaming, automatic Google account responder authentication, and Google Classroom quizzes."
+    category: "Forms & Surveys"
+
+  # ==========================================
+  # 10. Documentation
+  # ==========================================
+  - saas_name: "Notion (Plus)"
+    saas_price_per_user_month: 10.00
+    alternative_name: "AppFlowy"
+    alternative_url: "https://appflowy.io"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://appflowy.io"
+    cloud_price: "Free tier / $7.50/user/month"
+    difficulty: "easy"
+    what_youll_miss: "Seamless multi-device mobile web publishing, massive community template ecosystem, and turn-key Notion AI integrations."
+    category: "Documentation"
+
+  - saas_name: "Confluence (Standard)"
+    saas_price_per_user_month: 6.05
+    alternative_name: "BookStack"
+    alternative_url: "https://www.bookstackapp.com"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "Deep Atlassian ecosystem integrations (live Jira issue macro embeds, Jira Service Management KB links), and complex corporate page approval workflows."
+    category: "Documentation"
+
+  - saas_name: "GitBook (Plus)"
+    saas_price_per_user_month: 8.00
+    alternative_name: "Docusaurus"
+    alternative_url: "https://docusaurus.io"
+    license: "MIT"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "easy"
+    what_youll_miss: "WYSIWYG browser editor for non-technical writers, instant versioned branch review links, and built-in GitBook AI search chat."
+    category: "Documentation"
+
+  - saas_name: "Slite (Standard)"
+    saas_price_per_user_month: 10.00
+    alternative_name: "Wiki.js"
+    alternative_url: "https://js.wiki"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: null
+    cloud_price: null
+    difficulty: "medium"
+    what_youll_miss: "Ask Slite generative AI assistant over company documents, minimalist opinionated aesthetic, and automated doc verification reminders."
+    category: "Documentation"
+
+  - saas_name: "DocuSign (Personal)"
+    saas_price_per_user_month: 15.00
+    alternative_name: "Documenso"
+    alternative_url: "https://documenso.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://documenso.com/pricing"
+    cloud_price: "Free tier / $30/user/month"
+    difficulty: "medium"
+    what_youll_miss: "Universal legal familiarity with conservative enterprise legal departments, and specialized certified government ID-verification tiers."
+    category: "Documentation"

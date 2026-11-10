@@ -27,3 +27,4 @@ When adding a tool, please respect the schema:
 ### The "Honest Trade-offs" Rule
 
 We love open source, but self-hosting or switching tools isn't free of quirks. Always provide an honest summary in `what_youll_miss` (e.g., missing integrations, maintenance overhead, UI polish differences).
+
