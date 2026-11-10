@@ -62,3 +62,4 @@ jobs:
           else
             echo "No changes detected in README.md or docs/tools.json."
           fi
+

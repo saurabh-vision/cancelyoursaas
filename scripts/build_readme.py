@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-cancel-your-saas: Build README.md from data/tools.yaml
-Generates the complete README.md with CFO savings calculator, category breakdown,
-per-tool trade-offs, and contribution guidelines.
+cancel-your-saas: Build README.md and Static Documentation
+Reads data/tools.yaml, exports docs/tools.json, embeds fallback data into docs/index.html,
+and generates the complete README.md with the CFO savings calculator.
 """
 
 from pathlib import Path
@@ -20,6 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = PROJECT_ROOT / "data" / "tools.yaml"
 README_FILE = PROJECT_ROOT / "README.md"
 DOCS_DIR = PROJECT_ROOT / "docs"
+DOCS_HTML_FILE = DOCS_DIR / "index.html"
 DOCS_JSON_FILE = DOCS_DIR / "tools.json"
 
 CATEGORY_ICONS = {
@@ -85,11 +86,37 @@ def format_currency(val: float) -> str:
 
 
 def slugify(text: str) -> str:
-    """GitHub markdown heading anchor slug generator."""
     text = text.lower()
     text = re.sub(r"[^\w\s-]", "", text)
     text = re.sub(r"[\s_]+", "-", text)
     return text.strip("-")
+
+
+def export_json_and_embed(tools):
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    json_str = json.dumps(tools, indent=2, ensure_ascii=False)
+
+    # 1. Write docs/tools.json
+    with open(DOCS_JSON_FILE, "w", encoding="utf-8") as f:
+        f.write(json_str)
+    print(f"Exported {len(tools)} tools to {DOCS_JSON_FILE.name}")
+
+    # 2. Inject fallback data into docs/index.html (for offline or file:// protocol use)
+    if DOCS_HTML_FILE.exists():
+        html_content = DOCS_HTML_FILE.read_text(encoding="utf-8")
+        marker_pattern = r"(/\*__TOOLS_DATA_INLINE_START__\*/)(.*?)(/\*__TOOLS_DATA_INLINE_END__\*/)"
+        replacement = f"/*__TOOLS_DATA_INLINE_START__*/window.__TOOLS_DATA__ = {json_str};/*__TOOLS_DATA_INLINE_END__*/"
+        
+        if "/*__TOOLS_DATA_INLINE_START__*/" in html_content:
+            html_content = re.sub(marker_pattern, replacement, html_content, flags=re.DOTALL)
+        else:
+            # Append before </head> or at the top of <script>
+            html_content = html_content.replace(
+                "<script>",
+                f"<script>\n    {replacement}\n"
+            )
+        DOCS_HTML_FILE.write_text(html_content, encoding="utf-8")
+        print(f"Embedded fallback data into {DOCS_HTML_FILE.name}")
 
 
 def build_readme_content(tools):
@@ -232,18 +259,15 @@ def main():
     tools = load_tools(DATA_FILE)
     print(f"Loaded and validated {len(tools)} tools from {DATA_FILE.name}")
 
+    # Export JSON and embed into HTML
+    export_json_and_embed(tools)
+
     # Build README content
     new_readme = build_readme_content(tools)
 
     # Write README.md
     README_FILE.write_text(new_readme, encoding="utf-8")
     print(f"Successfully generated {README_FILE.name}")
-
-    # Also keep docs/tools.json up to date
-    DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    with open(DOCS_JSON_FILE, "w", encoding="utf-8") as f:
-        json.dump(tools, f, indent=2, ensure_ascii=False)
-    print(f"Successfully synced {DOCS_JSON_FILE.name}")
 
 
 if __name__ == "__main__":
