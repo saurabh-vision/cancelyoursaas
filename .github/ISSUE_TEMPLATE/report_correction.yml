@@ -25,3 +25,4 @@ body:
       placeholder: "The SaaS price recently increased from $14 to $19/user/month. Source: https://..."
     validations:
       required: true
+

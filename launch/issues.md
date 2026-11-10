@@ -112,3 +112,4 @@ These 5 issues are pre-formatted and ready to be opened in the GitHub repository
   - **Difficulty**: `easy`
   - **Category**: `Design & Creative`
   - **What You'll Miss**: `Cloud-hosted instant link sharing, automatic cloud video transcoding, and AI video chapter summaries.`
+
