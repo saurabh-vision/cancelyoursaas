@@ -1,0 +1,50 @@
+# cancel-your-saas: Open-source alternatives to expensive SaaS tools
+# Schema for each entry:
+# - saas_name: Name of the proprietary SaaS tool (string)
+# - saas_price_per_user_month: Baseline list price per user/month in USD (number)
+# - alternative_name: Name of the open-source alternative (string)
+# - alternative_url: Homepage or repository URL of the alternative (string)
+# - license: Open-source or source-available license, e.g., AGPL-3.0, Apache-2.0, MIT (string)
+# - self_host: Whether it can be fully self-hosted for free (boolean)
+# - cloud_option_url: Optional URL for managed cloud hosting (string, optional)
+# - cloud_price: Optional pricing for managed cloud hosting (string, optional)
+# - difficulty: Self-hosting and maintenance difficulty: easy | medium | hard (string)
+# - what_youll_miss: Honest, pragmatic trade-offs and missing convenience features (string)
+# - category: Functional category, e.g., Team Communication, Automation, Scheduling (string)
+
+tools:
+  - saas_name: "Slack"
+    saas_price_per_user_month: 8.75
+    alternative_name: "Mattermost"
+    alternative_url: "https://mattermost.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://mattermost.com/pricing/"
+    cloud_price: "$10/user/month"
+    difficulty: "medium"
+    what_youll_miss: "Polished Slack Huddles experience, thousands of pre-configured bot integrations, and friction-free cross-organization Slack Connect channels."
+    category: "Team Communication & Chat"
+
+  - saas_name: "Zapier"
+    saas_price_per_user_month: 29.99
+    alternative_name: "n8n"
+    alternative_url: "https://n8n.io"
+    license: "Sustainable Use License"
+    self_host: true
+    cloud_option_url: "https://n8n.io/pricing"
+    cloud_price: "€20/month"
+    difficulty: "medium"
+    what_youll_miss: "Immediate out-of-the-box OAuth connections for 6,000+ niche web apps and zero-maintenance webhook queues without server administration."
+    category: "Workflow & Automation"
+
+  - saas_name: "Calendly"
+    saas_price_per_user_month: 12.00
+    alternative_name: "Cal.com"
+    alternative_url: "https://cal.com"
+    license: "AGPL-3.0"
+    self_host: true
+    cloud_option_url: "https://cal.com/pricing"
+    cloud_price: "Free tier / $15/user/month"
+    difficulty: "easy"
+    what_youll_miss: "Ubiquitous brand familiarity with non-technical corporate clients and some complex enterprise round-robin routing presets."
+    category: "Scheduling & Meetings"
