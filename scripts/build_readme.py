@@ -92,31 +92,14 @@ def slugify(text: str) -> str:
     return text.strip("-")
 
 
-def export_json_and_embed(tools):
+def export_json(tools):
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     json_str = json.dumps(tools, indent=2, ensure_ascii=False)
 
-    # 1. Write docs/tools.json
+    # Write docs/tools.json
     with open(DOCS_JSON_FILE, "w", encoding="utf-8") as f:
         f.write(json_str)
     print(f"Exported {len(tools)} tools to {DOCS_JSON_FILE.name}")
-
-    # 2. Inject fallback data into docs/index.html (for offline or file:// protocol use)
-    if DOCS_HTML_FILE.exists():
-        html_content = DOCS_HTML_FILE.read_text(encoding="utf-8")
-        marker_pattern = r"(/\*__TOOLS_DATA_INLINE_START__\*/)(.*?)(/\*__TOOLS_DATA_INLINE_END__\*/)"
-        replacement = f"/*__TOOLS_DATA_INLINE_START__*/window.__TOOLS_DATA__ = {json_str};/*__TOOLS_DATA_INLINE_END__*/"
-        
-        if "/*__TOOLS_DATA_INLINE_START__*/" in html_content:
-            html_content = re.sub(marker_pattern, replacement, html_content, flags=re.DOTALL)
-        else:
-            # Append before </head> or at the top of <script>
-            html_content = html_content.replace(
-                "<script>",
-                f"<script>\n    {replacement}\n"
-            )
-        DOCS_HTML_FILE.write_text(html_content, encoding="utf-8")
-        print(f"Embedded fallback data into {DOCS_HTML_FILE.name}")
 
 
 def build_readme_content(tools):
@@ -259,8 +242,8 @@ def main():
     tools = load_tools(DATA_FILE)
     print(f"Loaded and validated {len(tools)} tools from {DATA_FILE.name}")
 
-    # Export JSON and embed into HTML
-    export_json_and_embed(tools)
+    # Export JSON
+    export_json(tools)
 
     # Build README content
     new_readme = build_readme_content(tools)
