@@ -3,31 +3,567 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cancel Your SaaS - Open-Source Alternatives</title>
+  <title>Cancel Your SaaS 💸 — Open-Source Alternatives with Honest Trade-offs</title>
+  <meta name="description" content="A fun, curated list of open-source alternatives to expensive SaaS tools, with honest trade-offs. Your CFO will thank you.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💸</text></svg>">
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
-      color: #1a202c;
-      background: #f7fafc;
+    :root {
+      --bg-primary: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-surface-hover: #334155;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     }
-    h1 { color: #2d3748; }
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: #e2e8f0;
-      font-size: 0.9em;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .github-link:hover {
+      background: var(--bg-surface-hover);
+      border-color: #64748b;
+    }
+
+    /* Savings Banner */
+    .calculator-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(56, 189, 248, 0.1) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 1rem;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .calculator-info h2 {
+      font-size: 1.4rem;
+      color: #34d399;
+      margin-bottom: 0.25rem;
+    }
+
+    .calculator-info p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .calculator-control {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .calculator-control label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .calculator-control input[type="range"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .savings-display {
+      text-align: right;
+    }
+
+    .savings-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #34d399;
+      line-height: 1.1;
+    }
+
+    .savings-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Search and Filters */
+    .filter-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-bar:focus {
+      border-color: var(--accent);
+    }
+
+    .pills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .pill {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .pill:hover {
+      border-color: #64748b;
+      color: var(--text-main);
+    }
+
+    .pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    /* Grid of Tool Cards */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+      box-shadow: var(--card-shadow);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #64748b;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.05em;
+    }
+
+    .difficulty-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tool-comparison {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .saas-dead {
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+
+    .alt-alive {
+      color: #34d399;
+    }
+
+    .price-comparison {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .price-box {
+      flex: 1;
+    }
+
+    .price-box .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .price-box .value {
+      font-weight: 700;
+    }
+
+    .price-box.saas .value {
+      color: var(--danger);
+    }
+
+    .price-box.alt .value {
+      color: var(--accent);
+    }
+
+    .miss-section {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid var(--warning);
+      padding: 0.75rem;
+      border-radius: 0.25rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.88rem;
+    }
+
+    .miss-title {
+      font-weight: 700;
+      color: var(--warning);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .license-tag {
+      font-family: monospace;
+      background: var(--bg-primary);
+      padding: 0.2rem 0.4rem;
+      border-radius: 0.25rem;
+      color: var(--text-muted);
+    }
+
+    .card-links a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .card-links a:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <h1>Cancel Your SaaS 💸</h1>
-  <p>A fun, curated list of open-source alternatives to expensive SaaS tools, with honest trade-offs.</p>
-  <p><span class="badge">Coming Soon</span> Interactive web directory powered by GitHub Pages.</p>
+
+  <div class="container">
+    <header>
+      <h1>Cancel Your SaaS 💸</h1>
+      <p class="tagline">Your CFO will thank you. Open-source alternatives with honest trade-offs.</p>
+      <a href="https://github.com/your-username/cancel-your-saas" class="github-link" target="_blank" rel="noopener">
+        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+        Star on GitHub
+      </a>
+    </header>
+
+    <!-- Interactive Savings Calculator -->
+    <section class="calculator-banner">
+      <div class="calculator-info">
+        <h2>💰 Live CFO Savings Calculator</h2>
+        <p>Annual software license cash saved if your organization cancels every tool below.</p>
+      </div>
+      <div class="calculator-control">
+        <label for="team-size">Team Size: <span id="team-size-val">10</span> seats</label>
+        <input type="range" id="team-size" min="1" max="100" value="10">
+      </div>
+      <div class="savings-display">
+        <div class="savings-amount" id="total-savings">$0</div>
+        <div class="savings-label">Yearly Savings</div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filter-section">
+      <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search SaaS, open-source alternative, license, or features...">
+      <div class="pills-row" id="category-pills">
+        <span class="pill active" data-category="all">All Categories</span>
+      </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <main class="tools-grid" id="tools-container">
+      <!-- Injected via JavaScript -->
+    </main>
+
+    <footer>
+      <p>Zero affiliate links. Distributed under the MIT License.</p>
+      <p style="margin-top: 0.5rem;">Contribute additions & corrections on GitHub.</p>
+    </footer>
+  </div>
+
+  <script>
+    let toolsData = [];
+    let activeCategory = 'all';
+
+    const difficultyIcons = {
+      easy: '🟢 Easy',
+      medium: '🟡 Medium',
+      hard: '🔴 Hard'
+    };
+
+    async function init() {
+      try {
+        const res = await fetch('tools.json');
+        toolsData = await res.json();
+      } catch (e) {
+        console.error("Failed to load tools.json", e);
+        // Fallback placeholder message if not served over HTTP
+        document.getElementById('tools-container').innerHTML = `
+          <div class="empty-state">
+            <h3>Unable to fetch tools.json</h3>
+            <p>Ensure this page is hosted via a web server or GitHub Pages.</p>
+          </div>
+        `;
+        return;
+      }
+
+      setupCategories();
+      setupCalculator();
+      setupSearch();
+      render();
+    }
+
+    function setupCategories() {
+      const categories = Array.from(new Set(toolsData.map(t => t.category))).sort();
+      const container = document.getElementById('category-pills');
+
+      categories.forEach(cat => {
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.dataset.category = cat;
+        pill.textContent = cat;
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          activeCategory = cat;
+          render();
+        });
+        container.appendChild(pill);
+      });
+
+      document.querySelector('[data-category="all"]').addEventListener('click', (e) => {
+        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        e.target.classList.add('active');
+        activeCategory = 'all';
+        render();
+      });
+    }
+
+    function setupCalculator() {
+      const slider = document.getElementById('team-size');
+      const valDisplay = document.getElementById('team-size-val');
+
+      const updateSavings = () => {
+        const size = parseInt(slider.value, 10);
+        valDisplay.textContent = size;
+        const totalPerSeat = toolsData.reduce((acc, t) => acc + (t.saas_price_per_user_month || 0), 0);
+        const yearly = totalPerSeat * size * 12;
+        document.getElementById('total-savings').textContent = `$${yearly.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+      };
+
+      slider.addEventListener('input', updateSavings);
+      updateSavings();
+    }
+
+    function setupSearch() {
+      const search = document.getElementById('search-input');
+      search.addEventListener('input', () => {
+        render();
+      });
+    }
+
+    function render() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const container = document.getElementById('tools-container');
+
+      const filtered = toolsData.filter(tool => {
+        const matchesCategory = (activeCategory === 'all' || tool.category === activeCategory);
+        if (!matchesCategory) return false;
+
+        if (!query) return true;
+        const haystack = [
+          tool.saas_name,
+          tool.alternative_name,
+          tool.license,
+          tool.what_youll_miss,
+          tool.category
+        ].join(' ').toLowerCase();
+
+        return haystack.includes(query);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No matching tools found</h3>
+            <p>Try searching for a different keyword or category.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const diff = difficultyIcons[t.difficulty?.toLowerCase()] || t.difficulty;
+        const saasPrice = t.saas_price_per_user_month === 0 ? 'Free' : `$${t.saas_price_per_user_month.toFixed(2)}/mo`;
+        const cloudPrice = t.cloud_price ? ` / ${t.cloud_price}` : '';
+        const cloudLink = t.cloud_option_url ? ` • <a href="${t.cloud_option_url}" target="_blank" rel="noopener">Cloud</a>` : '';
+
+        return `
+          <article class="card">
+            <div>
+              <div class="card-header">
+                <span class="card-category">${t.category}</span>
+                <span class="difficulty-badge">${diff}</span>
+              </div>
+              <div class="tool-comparison">
+                <span class="saas-dead">${t.saas_name}</span>
+                <span>→</span>
+                <span class="alt-alive">${t.alternative_name}</span>
+              </div>
+              <div class="price-comparison">
+                <div class="price-box saas">
+                  <span class="label">SaaS Cost</span>
+                  <span class="value">${saasPrice}</span>
+                </div>
+                <div class="price-box alt">
+                  <span class="label">Self-Host</span>
+                  <span class="value">$0${cloudPrice}</span>
+                </div>
+              </div>
+              <div class="miss-section">
+                <span class="miss-title">⚠️ What you'll miss</span>
+                <p>${t.what_youll_miss}</p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="license-tag">${t.license}</span>
+              <div class="card-links">
+                <a href="${t.alternative_url}" target="_blank" rel="noopener">Visit ${t.alternative_name}</a>
+                ${cloudLink}
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    init();
+  </script>
 </body>
 </html>
-
