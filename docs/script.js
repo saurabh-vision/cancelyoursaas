@@ -24,6 +24,17 @@
     "Intercom", "Notion (Plus)"
   ]);
 
+  const AGENCY_STACK_PRESET = new Set([
+    "Slack", "Figma (Pro)", "Loom (Business)", "Miro (Starter)",
+    "Airtable (Team)", "Typeform (Basic)", "DocuSign (Personal)",
+    "Calendly", "Asana"
+  ]);
+
+  const INDIE_STACK_PRESET = new Set([
+    "GitHub (Team)", "Postman", "Vercel (Pro)", "Firebase (Blaze Base)",
+    "Google Analytics", "1Password (Business)", "Make (Core)", "Notion (Plus)"
+  ]);
+
   // DOM Elements
   const container = document.getElementById('tools-container');
   const searchInput = document.getElementById('search-input');
@@ -248,6 +259,32 @@
       updateCalculator();
     });
 
+    document.getElementById('btn-agency-preset').addEventListener('click', () => {
+      selectedToolNames.clear();
+      tools.forEach(t => {
+        if (AGENCY_STACK_PRESET.has(t.saas_name)) {
+          selectedToolNames.add(t.saas_name);
+        }
+      });
+      updateCardCheckboxes();
+      updateCalculator();
+    });
+
+    document.getElementById('btn-indie-preset').addEventListener('click', () => {
+      selectedToolNames.clear();
+      tools.forEach(t => {
+        if (INDIE_STACK_PRESET.has(t.saas_name)) {
+          selectedToolNames.add(t.saas_name);
+        }
+      });
+      updateCardCheckboxes();
+      updateCalculator();
+    });
+
+    document.getElementById('btn-export-csv').addEventListener('click', () => {
+      exportToCsv();
+    });
+
     document.getElementById('btn-clear-all').addEventListener('click', () => {
       selectedToolNames.clear();
       updateCardCheckboxes();
@@ -430,6 +467,75 @@
         closeModal();
       }
     });
+  }
+
+  // ==========================================
+  // CSV Export
+  // ==========================================
+  function exportToCsv() {
+    let teamSize = parseInt(teamSizeInput.value, 10);
+    if (isNaN(teamSize) || teamSize < 1) teamSize = 10;
+
+    let targetTools = tools.filter(t => selectedToolNames.has(t.saas_name));
+    let isSubset = true;
+    if (targetTools.length === 0) {
+      targetTools = tools;
+      isSubset = false;
+    }
+
+    const headers = [
+      "Category",
+      "SaaS Name",
+      "SaaS Price (USD/User/Mo)",
+      "Alternative Name",
+      "Alternative URL",
+      "License",
+      "Difficulty",
+      "What You'll Miss"
+    ];
+
+    const escapeCsv = (str) => {
+      if (str == null) return '""';
+      const s = String(str).replace(/"/g, '""');
+      return `"${s}"`;
+    };
+
+    const rows = targetTools.map(t => [
+      escapeCsv(t.category),
+      escapeCsv(t.saas_name),
+      t.saas_price_per_user_month,
+      escapeCsv(t.alternative_name),
+      escapeCsv(t.alternative_url),
+      escapeCsv(t.license),
+      escapeCsv(t.difficulty),
+      escapeCsv(t.what_youll_miss)
+    ].join(','));
+
+    const monthlySeatSum = targetTools.reduce((acc, t) => acc + (t.saas_price_per_user_month || 0), 0);
+    const yearlySavings = monthlySeatSum * teamSize * 12;
+
+    const summaryRows = [
+      `# Cancel Your SaaS - Cost & Alternative Savings Report`,
+      `# Export Date: ${new Date().toISOString().split('T')[0]}`,
+      `# Scope: ${isSubset ? `Selected Tools (${targetTools.length})` : `Full Catalog (${targetTools.length})`}`,
+      `# Team Seats: ${teamSize}`,
+      `# Estimated Yearly Savings: $${Math.round(yearlySavings).toLocaleString('en-US')}`,
+      `# Directory: https://cancel-your-saas.pages.dev/`,
+      `#`
+    ];
+
+    const csvContent = "\uFEFF" + [...summaryRows, headers.join(','), ...rows].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `cancel-your-saas-report-${teamSize}seats.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showToast(`📥 Exported ${targetTools.length} tools to CSV report!`);
   }
 
   // ==========================================
