@@ -110,6 +110,7 @@
             <button type="button" class="btn-preset" id="btn-select-all" aria-label="Select all tools">Select All</button>
             <button type="button" class="btn-preset" id="btn-startup-preset" aria-label="Select startup staple tools">Startup Stack</button>
             <button type="button" class="btn-preset" id="btn-clear-all" aria-label="Clear selected tools">Clear</button>
+            <button type="button" class="btn-preset btn-share-accent" id="btn-share-savings" aria-label="Share calculated savings">🔗 Share</button>
           </div>
         </div>
       </div>
@@ -159,6 +160,35 @@
       <p>Prices checked on March 2026. Spotted a mistake? <a href="https://github.com/cancel-your-saas/cancel-your-saas/issues" target="_blank" rel="noopener">Open an issue on GitHub</a>.</p>
     </footer>
   </div>
+
+  <!-- Share Savings Modal -->
+  <div id="share-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="share-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="share-modal-title">💸 Share Your Team's Savings</h3>
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Send this customized calculation to your CFO, CTO, or share on social media:</p>
+        <div class="share-preview-box" id="share-preview-text"></div>
+        
+        <div class="share-actions-row">
+          <button type="button" class="btn-primary" id="btn-copy-share">📋 Copy Text &amp; Link</button>
+          <a href="#" class="btn-social x-btn" id="btn-share-x" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Share on X
+          </a>
+          <a href="#" class="btn-social in-btn" id="btn-share-in" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.21a1.64 1.64 0 0 0-1.64 1.63 1.64 1.64 0 1 0 3.28 0 1.64 1.64 0 0 0-1.64-1.63Z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast-notify" class="toast-notify" role="alert" aria-live="assertive"></div>
 
   <script src="script.js"></script>
 </body>

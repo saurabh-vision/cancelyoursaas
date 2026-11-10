@@ -7,7 +7,7 @@
   'use strict';
 
   let tools = [];
-  let selectedToolNames = new Set(); // Starts with 0 selected
+  let selectedToolNames = new Set(); // Starts with 0 selected unless URL params exist
   let currentCategory = 'all';
   let animatedSavingsCurrent = 0;
   let animationFrameId = null;
@@ -35,6 +35,16 @@
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const themeIconEl = document.getElementById('theme-icon');
 
+  // Share Modal & Toast Elements
+  const btnShareSavings = document.getElementById('btn-share-savings');
+  const shareModal = document.getElementById('share-modal');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const sharePreviewTextEl = document.getElementById('share-preview-text');
+  const btnCopyShare = document.getElementById('btn-copy-share');
+  const btnShareX = document.getElementById('btn-share-x');
+  const btnShareIn = document.getElementById('btn-share-in');
+  const toastNotify = document.getElementById('toast-notify');
+
   // ==========================================
   // Theme Management
   // ==========================================
@@ -50,7 +60,6 @@
       setTheme(next, true);
     });
 
-    // Listen to system changes if user hasn't explicitly set a preference
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       if (!localStorage.getItem('cs_theme')) {
         setTheme(e.matches ? 'dark' : 'light', false);
@@ -85,6 +94,58 @@
   }
 
   // ==========================================
+  // URL State Management (?seats=15&tools=Slack,Jira)
+  // ==========================================
+  function parseUrlState() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const seats = urlParams.get('seats');
+      if (seats) {
+        const parsedSeats = parseInt(seats, 10);
+        if (!isNaN(parsedSeats) && parsedSeats > 0) {
+          teamSizeInput.value = parsedSeats;
+        }
+      }
+
+      const toolsParam = urlParams.get('tools');
+      if (toolsParam) {
+        const queryTools = toolsParam.split(',').map(s => s.trim().toLowerCase());
+        tools.forEach(t => {
+          if (queryTools.includes(t.saas_name.toLowerCase()) || queryTools.includes(t.alternative_name.toLowerCase())) {
+            selectedToolNames.add(t.saas_name);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('Could not parse URL state', e);
+    }
+  }
+
+  function syncUrlState() {
+    try {
+      const url = new URL(window.location);
+      let teamSize = parseInt(teamSizeInput.value, 10);
+      if (isNaN(teamSize) || teamSize < 1) teamSize = 10;
+
+      if (teamSize !== 10) {
+        url.searchParams.set('seats', teamSize);
+      } else {
+        url.searchParams.delete('seats');
+      }
+
+      if (selectedToolNames.size > 0) {
+        url.searchParams.set('tools', Array.from(selectedToolNames).join(','));
+      } else {
+        url.searchParams.delete('tools');
+      }
+
+      window.history.replaceState({}, '', url.toString());
+    } catch (e) {
+      console.warn('Could not sync URL state', e);
+    }
+  }
+
+  // ==========================================
   // Data Loading & Fallback
   // ==========================================
   async function loadData() {
@@ -112,8 +173,10 @@
       }
     }
 
+    parseUrlState();
     setupCategoryChips();
     setupEventListeners();
+    setupShareModal();
     updateCalculator();
     renderCards();
   }
@@ -124,7 +187,6 @@
   function setupCategoryChips() {
     const categories = Array.from(new Set(tools.map(t => t.category))).sort();
 
-    // Clear dynamic chips (leave 'All Tools')
     const allChip = categoryChipsContainer.querySelector('[data-category="all"]');
     categoryChipsContainer.innerHTML = '';
     
@@ -238,7 +300,6 @@
     function step(currentTime) {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic curve
       const ease = 1 - Math.pow(1 - progress, 3);
       const current = startValue + (targetValue - startValue) * ease;
 
@@ -262,6 +323,8 @@
     const count = selectedToolNames.size;
     countSelectedEl.textContent = `${count} / ${tools.length}`;
 
+    syncUrlState();
+
     if (count === 0) {
       valMonthlyBillEl.textContent = '$0.00';
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -277,6 +340,96 @@
 
     valMonthlyBillEl.textContent = `$${monthlyTeamBill.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     animateSavingsNumber(yearlySavings);
+  }
+
+  // ==========================================
+  // Share Savings Modal & Toast
+  // ==========================================
+  function showToast(message) {
+    toastNotify.textContent = message;
+    toastNotify.classList.add('show');
+    setTimeout(() => {
+      toastNotify.classList.remove('show');
+    }, 2800);
+  }
+
+  function getSharePayload() {
+    let teamSize = parseInt(teamSizeInput.value, 10);
+    if (isNaN(teamSize) || teamSize < 1) teamSize = 10;
+
+    const selectedList = tools.filter(t => selectedToolNames.has(t.saas_name));
+    const monthlyPerSeat = selectedList.reduce((acc, t) => acc + (t.saas_price_per_user_month || 0), 0);
+    const yearlySavings = Math.round(monthlyPerSeat * teamSize * 12);
+
+    let toolsSnippet = '';
+    if (selectedList.length <= 3) {
+      toolsSnippet = selectedList.map(t => t.saas_name).join(', ');
+    } else {
+      const top3 = selectedList.slice(0, 3).map(t => t.saas_name).join(', ');
+      toolsSnippet = `${top3} +${selectedList.length - 3} more`;
+    }
+
+    const shareUrl = window.location.href;
+    const text = `Our ${teamSize}-person team could save $${yearlySavings.toLocaleString('en-US')}/year by replacing ${toolsSnippet} with open-source alternatives. Check your savings: ${shareUrl}`;
+
+    return { text, shareUrl, yearlySavings, teamSize, toolsSnippet };
+  }
+
+  function setupShareModal() {
+    btnShareSavings.addEventListener('click', () => {
+      if (selectedToolNames.size === 0) {
+        showToast('Tick at least 1 tool to calculate your shareable savings!');
+        return;
+      }
+
+      const { text, shareUrl, yearlySavings, teamSize, toolsSnippet } = getSharePayload();
+      sharePreviewTextEl.textContent = text;
+
+      // Update social URLs
+      const tweetText = `Our ${teamSize}-person team could save $${yearlySavings.toLocaleString('en-US')}/year by replacing ${toolsSnippet} with open-source alternatives 💸\n\nCalculate yours:`;
+      btnShareX.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+
+      btnShareIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+
+      shareModal.classList.add('active');
+      shareModal.setAttribute('aria-hidden', 'false');
+    });
+
+    function closeModal() {
+      shareModal.classList.remove('active');
+      shareModal.setAttribute('aria-hidden', 'true');
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    shareModal.addEventListener('click', (e) => {
+      if (e.target === shareModal) closeModal();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && shareModal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    btnCopyShare.addEventListener('click', async () => {
+      const { text } = getSharePayload();
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('📋 Link & message copied to clipboard!');
+        closeModal();
+      } catch (err) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('📋 Link & message copied!');
+        closeModal();
+      }
+    });
   }
 
   // ==========================================
@@ -381,4 +534,3 @@
   initTheme();
   loadData();
 })();
-
