@@ -1,6 +1,9 @@
 # Ready-to-Paste Launch Posts 📢
 
-Ready-to-use launch announcements customized for each community's unique culture and voice. Replace `<REPO_URL>` and `<PAGES_URL>` with your actual links before posting.
+Ready-to-use launch announcements customized for each community's unique culture and voice.
+
+**Repository:** `https://github.com/vimal-startup/cancel-your-saas`  
+**Live Directory:** `https://vimal-startup.github.io/cancel-your-saas/`
 
 ---
 
@@ -10,7 +13,7 @@ Ready-to-use launch announcements customized for each community's unique culture
 > Show HN: Cancel Your SaaS – Curated open-source alternatives with honest trade-offs
 
 **URL (or text post URL):**
-`<REPO_URL>` or `<PAGES_URL>`
+`https://github.com/vimal-startup/cancel-your-saas` or `https://vimal-startup.github.io/cancel-your-saas/`
 
 **Text Body (if submitting as a text post or first comment):**
 ```markdown
@@ -27,8 +30,8 @@ I put together "Cancel Your SaaS": an open list tracking 46 vetted open-source a
 
 Everything is driven by a single YAML file (`data/tools.yaml`), automatically rebuilt into the README and an interactive client-side web directory on GitHub Pages. Zero affiliate links, zero tracking, zero sponsored rankings.
 
-GitHub: <REPO_URL>
-Interactive Directory: <PAGES_URL>
+GitHub: https://github.com/vimal-startup/cancel-your-saas
+Interactive Directory: https://vimal-startup.github.io/cancel-your-saas/
 
 Would love your feedback on the trade-off descriptions and suggestions for other high-quality self-hostable projects!
 ```
@@ -57,8 +60,8 @@ We launched **cancel-your-saas**: a community catalog of open-source alternative
 - 🚫 **Strictly zero affiliate links or sponsored placements.**
 
 Check it out here:
-- GitHub: <REPO_URL>
-- Web Directory: <PAGES_URL>
+- GitHub: https://github.com/vimal-startup/cancel-your-saas
+- Web Directory: https://vimal-startup.github.io/cancel-your-saas/
 
 If you spot an inaccurate trade-off or have run any of these in production and want to add practical caveats, PRs and suggestions are warmly welcome!
 ```
@@ -83,8 +86,8 @@ Introducing **cancel-your-saas**:
 3. **Single Source of Truth**: Driven by `data/tools.yaml` with GitHub Actions that automatically sync the markdown tables and the web directory.
 4. **No Monetization**: No affiliate codes, no tracking redirects, and no pay-to-play featured slots.
 
-Repo: <REPO_URL>
-Interactive Browser: <PAGES_URL>
+Repo: https://github.com/vimal-startup/cancel-your-saas
+Interactive Browser: https://vimal-startup.github.io/cancel-your-saas/
 
 We have 46 tools so far across Chat, PM, E-signatures, Analytics, and Passwords. We'd love your contributions and suggestions for other actively maintained FOSS projects!
 ```
@@ -117,8 +120,8 @@ If a 10-person company replaces these subscriptions with self-hosted or open-cor
 
 Even better, we included a **"What You'll Miss"** section for every tool so you don't break your company workflow (e.g., swapping Calendly for Cal.com is almost frictionless, while swapping Datadog for SigNoz requires real DevOps bandwidth).
 
-Interactive Calculator: <PAGES_URL>
-GitHub Repo: <REPO_URL>
+Interactive Calculator: https://vimal-startup.github.io/cancel-your-saas/
+GitHub Repo: https://github.com/vimal-startup/cancel-your-saas
 
 Hope this helps early-stage teams stretch their runway a little further!
 ```
@@ -164,13 +167,13 @@ Hope this helps early-stage teams stretch their runway a little further!
 > 👥 Select your team size
 > 💸 Watch your live yearly savings calculate in real-time
 > 
-> Try it here: <PAGES_URL>
+> Try it here: https://vimal-startup.github.io/cancel-your-saas/
 
 **Tweet 5 (Outro):**
 > 100% open source. Zero affiliate links. No sponsored rankings.
 > 
 > Check out the GitHub repo, star it, and submit your favorite open-source alternatives:
-> <REPO_URL>
+> https://github.com/vimal-startup/cancel-your-saas
 
 ---
 
@@ -200,8 +203,8 @@ An open-source directory of 46 verified alternatives across 10 categories, accom
 
 The project is completely open source and community-maintained, with zero affiliate links or sponsored placements.
 
-Explore the interactive calculator: <PAGES_URL>
-Contribute on GitHub: <REPO_URL>
+Explore the interactive calculator: https://vimal-startup.github.io/cancel-your-saas/
+Contribute on GitHub: https://github.com/vimal-startup/cancel-your-saas
 
 #OpenSource #Startups #SaaS #CostOptimization #SoftwareEngineering #Technology
 ```

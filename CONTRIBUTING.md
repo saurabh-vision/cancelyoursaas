@@ -54,7 +54,7 @@ All catalog data lives exclusively in [`data/tools.yaml`](data/tools.yaml). Each
 ### 1. Clone & Set Up
 
 ```bash
-git clone https://github.com/cancel-your-saas/cancel-your-saas.git
+git clone https://github.com/vimal-startup/cancel-your-saas.git
 cd cancel-your-saas
 pip install pyyaml
 ```
