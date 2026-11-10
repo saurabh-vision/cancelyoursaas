@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
-cancel-your-saas: Build and Sync README & Documentation
-Reads data/tools.yaml, validates schema integrity, and injects comparison tables into README.md.
+cancel-your-saas: Build README.md from data/tools.yaml
+Generates the complete README.md with CFO savings calculator, category breakdown,
+per-tool trade-offs, and contribution guidelines.
 """
 
 from pathlib import Path
+import json
+import re
 import sys
-import argparse
 
 try:
     import yaml
@@ -17,12 +19,23 @@ except ImportError:
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = PROJECT_ROOT / "data" / "tools.yaml"
 README_FILE = PROJECT_ROOT / "README.md"
+DOCS_DIR = PROJECT_ROOT / "docs"
+DOCS_JSON_FILE = DOCS_DIR / "tools.json"
 
-MARKER_START = "<!-- TOOLS_TABLE_START -->"
-MARKER_END = "<!-- TOOLS_TABLE_END -->"
+CATEGORY_ICONS = {
+    "Communication": "💬",
+    "Project Management": "📋",
+    "Developer Tools": "💻",
+    "Analytics": "📈",
+    "Design & Creative": "🎨",
+    "Security & Passwords": "🔒",
+    "Automation": "⚡",
+    "Customer Support": "🎧",
+    "Forms & Surveys": "📝",
+    "Documentation": "📚",
+}
 
-VALID_DIFFICULTIES = {"easy", "medium", "hard"}
-DIFFICULTY_BADGES = {
+DIFFICULTY_MAP = {
     "easy": "🟢 Easy",
     "medium": "🟡 Medium",
     "hard": "🔴 Hard",
@@ -59,110 +72,178 @@ def validate_tools(tools):
                 raise ValueError(f"Tool '{name}' is missing required field: '{field}'")
 
         diff = str(item.get("difficulty", "")).lower()
-        if diff not in VALID_DIFFICULTIES:
+        if diff not in DIFFICULTY_MAP:
             raise ValueError(
-                f"Tool '{name}' has invalid difficulty '{item.get('difficulty')}'. Expected one of: {VALID_DIFFICULTIES}"
+                f"Tool '{name}' has invalid difficulty '{item.get('difficulty')}'. Expected: {list(DIFFICULTY_MAP.keys())}"
             )
 
-        if not isinstance(item.get("self_host"), bool):
-            raise ValueError(f"Tool '{name}' 'self_host' must be a boolean.")
 
-        price = item.get("saas_price_per_user_month")
-        if not isinstance(price, (int, float)) or price < 0:
-            raise ValueError(f"Tool '{name}' price must be a non-negative number.")
-
-
-def format_currency(amount: float) -> str:
-    if amount == 0:
+def format_currency(val: float) -> str:
+    if val == 0:
         return "Free"
-    return f"${amount:,.2f}"
+    return f"${val:,.2f}"
 
 
-def generate_markdown_table(tools):
+def slugify(text: str) -> str:
+    """GitHub markdown heading anchor slug generator."""
+    text = text.lower()
+    text = re.sub(r"[^\w\s-]", "", text)
+    text = re.sub(r"[\s_]+", "-", text)
+    return text.strip("-")
+
+
+def build_readme_content(tools):
+    total_tools = len(tools)
+
+    # Calculate Savings for a 10-person team
+    monthly_seat_sum = sum(t["saas_price_per_user_month"] for t in tools)
+    team_size = 10
+    monthly_team_cost = monthly_seat_sum * team_size
+    yearly_team_savings = monthly_team_cost * 12
+
+    # Group tools by category
     categories = {}
     for tool in tools:
         cat = tool.get("category", "General")
         categories.setdefault(cat, []).append(tool)
 
-    lines = []
+    content = []
 
-    # Summary Stats
-    total_tools = len(tools)
-    categories_count = len(categories)
-    lines.append(f"> **Catalog**: Tracking **{total_tools}** open-source alternatives across **{categories_count}** SaaS categories.\n")
+    # 1. Header
+    content.append("# Cancel Your SaaS 💸")
+    content.append("> **Your CFO will thank you.**")
+    content.append("")
+    content.append("A fun, curated, and brutally honest list of open-source alternatives to expensive SaaS subscriptions.")
+    content.append("")
+    content.append("[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)")
+    content.append(f"[![Tools Tracked](https://img.shields.io/badge/Tools_Tracked-{total_tools}-orange.svg)](data/tools.yaml)")
+    content.append(f"[![Categories](https://img.shields.io/badge/Categories-{len(categories)}-purple.svg)](#-categories)")
+    content.append("[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)")
+    content.append("")
+    content.append("---")
+    content.append("")
 
-    # Table of Contents
-    lines.append("### Categories\n")
-    toc_items = []
+    # 2. The CFO Savings Calculator
+    content.append("## 💰 The CFO Savings Calculator")
+    content.append("")
+    content.append(f"Imagine a **{team_size}-person company** using every SaaS staple listed below:")
+    content.append("")
+    content.append(f"- 💳 **Combined SaaS cost per user:** **${monthly_seat_sum:,.2f}** / month")
+    content.append(f"- 🏢 **Total bill for a {team_size}-person team:** **${monthly_team_cost:,.2f}** / month")
+    content.append(f"- 🚀 **Total yearly cash savings if you switched everything:**")
+    content.append("")
+    content.append(f"$$\\Large \\mathbf{{\\${yearly_team_savings:,.2f} \\text{{ / year}}}}$$")
+    content.append("")
+    content.append("> *Even replacing just 3 or 4 tools (like your chat, ticketing, or project management) routinely saves growing startups **$20,000 to $50,000+** annually.*")
+    content.append("")
+    content.append("---")
+    content.append("")
+
+    # 3. Table of Contents
+    content.append("## 🧭 Categories")
+    content.append("")
+    toc_links = []
     for cat in sorted(categories.keys()):
-        anchor = cat.lower().replace(" ", "-").replace("&", "").replace("--", "-")
-        toc_items.append(f"[{cat}](#{anchor})")
-    lines.append(" • ".join(toc_items) + "\n")
+        icon = CATEGORY_ICONS.get(cat, "📦")
+        slug = slugify(f"{icon} {cat}")
+        count = len(categories[cat])
+        toc_links.append(f"- [{icon} **{cat}** ({count})](#{slug})")
+    content.append("\n".join(toc_links))
+    content.append("")
+    content.append("---")
+    content.append("")
 
-    for cat, items in sorted(categories.items()):
-        lines.append(f"### {cat}\n")
-        lines.append(
-            "| SaaS Tool | SaaS Price | Open-Source Alternative | License | Self-Host | Difficulty | What You'll Miss |"
-        )
-        lines.append(
-            "| :--- | :--- | :--- | :--- | :---: | :---: | :--- |"
-        )
+    # 4. Per-category & Per-entry Sections
+    for cat in sorted(categories.keys()):
+        icon = CATEGORY_ICONS.get(cat, "📦")
+        items = sorted(categories[cat], key=lambda x: x["saas_name"].lower())
+        content.append(f"## {icon} {cat}")
+        content.append("")
 
-        for item in sorted(items, key=lambda x: x["saas_name"]):
-            saas = f"**{item['saas_name']}**"
-            saas_price = f"{format_currency(item['saas_price_per_user_month'])}/user/mo"
-            alt = f"[{item['alternative_name']}]({item['alternative_url']})"
-            license_badge = f"`{item['license']}`"
-            self_host = "✅ Yes" if item.get("self_host") else "❌ No"
-            difficulty = DIFFICULTY_BADGES.get(item.get("difficulty", "").lower(), item.get("difficulty", ""))
-            what_youll_miss = item.get("what_youll_miss", "").replace("|", "\\|")
+        for item in items:
+            saas = item["saas_name"]
+            alt = item["alternative_name"]
+            alt_url = item["alternative_url"]
+            saas_price = format_currency(item["saas_price_per_user_month"])
+            diff = DIFFICULTY_MAP.get(str(item.get("difficulty")).lower(), item.get("difficulty"))
+            license_name = item.get("license")
+            miss = item.get("what_youll_miss", "")
 
-            lines.append(
-                f"| {saas} | {saas_price} | {alt} | {license_badge} | {self_host} | {difficulty} | {what_youll_miss} |"
-            )
-        lines.append("")
+            # Formulate cloud / self-host text
+            could_pay_parts = ["$0 (Self-hosted)"]
+            if item.get("cloud_price"):
+                could_pay_parts.append(f"{item['cloud_price']} (Managed Cloud)")
+            could_pay_str = " or ".join(could_pay_parts)
 
-    return "\n".join(lines)
+            # Formulate links
+            links = [f"[{alt}]({alt_url})"]
+            if item.get("cloud_option_url"):
+                links.append(f"[Cloud Option]({item['cloud_option_url']})")
+            links_str = " • ".join(links)
 
+            content.append(f"### 🪦 {saas} → ✅ {alt}")
+            content.append(f"- 💸 **You pay:** {saas_price}/user/mo")
+            content.append(f"- 🆓 **You could pay:** {could_pay_str}")
+            content.append(f"- 😎 **Switch difficulty:** {diff}")
+            content.append(f"- 📜 **License:** `{license_name}`")
+            content.append(f"- ⚠️ **What you'll miss:** {miss}")
+            content.append(f"- 🔗 **Links:** {links_str}")
+            content.append("")
 
-def update_readme(markdown_content: str):
-    if not README_FILE.exists():
-        raise FileNotFoundError(f"README file not found at {README_FILE}")
+        content.append("---")
+        content.append("")
 
-    content = README_FILE.read_text(encoding="utf-8")
+    # 5. How to contribute
+    content.append("## 🤝 How to Contribute")
+    content.append("")
+    content.append("We welcome submissions for new tools, updated pricing, and corrections!")
+    content.append("")
+    content.append("1. **Check the rules**: Read [`CONTRIBUTING.md`](CONTRIBUTING.md). We require verified public pricing, verified open-source licenses, and genuinely honest trade-offs in `what_youll_miss`.")
+    content.append("2. **Edit `data/tools.yaml`**: Add your entry respecting the YAML schema.")
+    content.append("3. **Rebuild the README**:")
+    content.append("   ```bash")
+    content.append("   python scripts/build_readme.py")
+    content.append("   ```")
+    content.append("4. **Open a Pull Request**: Submit your PR with a brief explanation.")
+    content.append("")
+    content.append("---")
+    content.append("")
 
-    if MARKER_START not in content or MARKER_END not in content:
-        raise ValueError(f"README markers '{MARKER_START}' or '{MARKER_END}' missing from {README_FILE}")
+    # 6. Affiliate Note
+    content.append("## 🚫 Affiliate Links Policy")
+    content.append("")
+    content.append("> **Zero affiliate links. Ever.**")
+    content.append("")
+    content.append("Every link in this repository points directly to official project repositories or homepages. There are no referral codes, tracking redirects, or sponsored placements—just pure, unfiltered open-source advocacy.")
+    content.append("")
+    content.append("---")
+    content.append("")
 
-    pre = content.split(MARKER_START)[0]
-    post = content.split(MARKER_END)[1]
+    # 7. License
+    content.append("## 📄 License")
+    content.append("")
+    content.append("Distributed under the [MIT License](LICENSE).")
+    content.append("")
 
-    new_content = f"{pre}{MARKER_START}\n\n{markdown_content}\n{MARKER_END}{post}"
-    README_FILE.write_text(new_content, encoding="utf-8")
-    print(f"Successfully updated {README_FILE.name} with latest tool tables!")
+    return "\n".join(content)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Build and update cancel-your-saas documentation.")
-    parser.add_argument("--write", action="store_true", help="Write generated tables directly into README.md")
-    parser.add_argument("--check", action="store_true", help="Validate YAML schema only")
-    args = parser.parse_args()
-
     tools = load_tools(DATA_FILE)
-    print(f"Validated {len(tools)} tools from {DATA_FILE.name}")
+    print(f"Loaded and validated {len(tools)} tools from {DATA_FILE.name}")
 
-    if args.check:
-        print("Schema validation passed.")
-        return
+    # Build README content
+    new_readme = build_readme_content(tools)
 
-    table_md = generate_markdown_table(tools)
+    # Write README.md
+    README_FILE.write_text(new_readme, encoding="utf-8")
+    print(f"Successfully generated {README_FILE.name}")
 
-    if args.write:
-        update_readme(table_md)
-    else:
-        print("\n--- Generated Markdown Preview ---\n")
-        print(table_md)
-        print("Tip: Run with --write to sync README.md")
+    # Also keep docs/tools.json up to date
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(DOCS_JSON_FILE, "w", encoding="utf-8") as f:
+        json.dump(tools, f, indent=2, ensure_ascii=False)
+    print(f"Successfully synced {DOCS_JSON_FILE.name}")
 
 
 if __name__ == "__main__":

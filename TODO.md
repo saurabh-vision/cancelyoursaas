@@ -64,3 +64,4 @@ The following tools are candidates for future batch additions once community rev
 - [ ] **Loom** -> Screenity (GPL-3.0)
 - [ ] **Datadog APM** -> OpenTelemetry Collector / Jaeger
 - [ ] **Coda** -> AFFiNE (MIT/EE)
+

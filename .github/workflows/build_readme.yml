@@ -1,0 +1,64 @@
+name: Regenerate README
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'data/tools.yaml'
+      - 'scripts/build_readme.py'
+      - '.github/workflows/build_readme.yml'
+  pull_request:
+    paths:
+      - 'data/tools.yaml'
+      - 'scripts/build_readme.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Regenerate README.md and docs/tools.json
+        run: |
+          python scripts/build_readme.py
+
+      - name: Check for uncommitted README changes (Pull Requests)
+        if: github.event_name == 'pull_request'
+        run: |
+          if ! git diff --exit-code README.md docs/tools.json; then
+            echo "::error::README.md or docs/tools.json is out of date! Please run 'python scripts/build_readme.py' locally and commit the result."
+            exit 1
+          fi
+
+      - name: Commit and push changes (Push to Main)
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md docs/tools.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-regenerate README.md from data/tools.yaml [skip ci]"
+            git push
+          else
+            echo "No changes detected in README.md or docs/tools.json."
+          fi
